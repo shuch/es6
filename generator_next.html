@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function* f() {
+      for (var i = 0; true; i++) {
+        var reset = yield i;
+        console.log(reset);
+        if (reset) { i = -1; }
+      }
+    }
+    var g = f();
+    g.next();
+    // next 参数是上一个 yield 返回值
+    g.next(true);
+
+
+
+    function* foo(x) {
+      var y = 2 * (yield (x + 1));
+      var z = yield (y / 3);
+      return (x + y + z);
+    }
+    var a = foo(5);
+    a.next();
+    a.next(12);
+    a.next(13);
+
+    function* dataConsumer() {
+      console.log('start');
+      console.log(`1.${yield}`);
+      console.log(`2.${yield}`);
+      return 'result';
+    }
+    let gen = dataConsumer();
+    
+  </script>
+</body>
+</html>

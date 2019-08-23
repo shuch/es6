@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    class Logger {
+        constructor() {
+          this.printName = (name = 'th') => {
+            this.print(`hello ${name}`);
+          }
+        }
+        // printName(name = 'th') {
+        //     console.log(this);
+        //     this.print(`hello ${name}`);
+        // }
+        print(text) {
+            console.log(text);
+        }
+    }
+
+    const logger = new Logger();
+    // const { printName } = logger;
+    logger.printName('shuchen');
+  </script>
+</body>
+</html>

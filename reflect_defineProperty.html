@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function MyDate() {}
+
+    // old method
+    Object.defineProperty(MyDate, 'now', {
+      value: () => Date.now()
+    });
+
+    // new method
+    Reflect.defineProperty(MyDate, 'now2', {
+      value: () => Date.now()
+    })
+
+    // combine proxy
+    const p = new Proxy({}, {
+      defineProperty(target, prop, descriptor) {
+        console.log(descriptor);
+        return Reflect.defineProperty(target, prop, descriptor);
+      }
+    });
+
+    p.foo = 'bar';
+    // console.log(p.foo);
+
+  </script>
+</body>
+</html>

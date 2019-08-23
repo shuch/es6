@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>proxy_get</title>
+</head>
+<body>
+  <script>
+    let validator = {
+      set: function(obj, prop, value) {
+        if (prop === 'age') {
+          if (!Number.isInteger(value)) {
+            throw new TypeError('the age is not an interger');
+          }
+          if (value > 200) {
+            throw new RangeError('the age seems invalid');
+          }
+        }
+        obj[prop] = value;
+      }
+    }
+    let person = new Proxy({}, validator);
+
+    // 内部属性
+    const handler = {
+      get (target, key) {
+        invariant(key, 'get');
+        return target[key];
+      },
+      set (target, key, value) {
+        invariant(key, 'set');
+        target[key] = value;
+        return true;
+      }
+    };
+    function invariant (key, action) {
+      if (key[0] === '_') {
+        throw new Error(`Invalid attempt to ${action} private \'${key}\' property`);
+      }
+    }
+    const target = {};
+    const proxy = new Proxy(target, handler);
+
+    // receiver
+    const handler2 = {
+      set: function (obj, prop, value, receiver) {
+        obj[prop] = receiver;
+      }
+    };
+    const proxy2 = new Proxy({}, handler2);
+    // proxy2.a = 1;
+    // proxy2.a === proxy2
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 拦截hasProperty操作， 隐藏对象的属性
+    var handler = {
+      has (target, key) {
+        if (key[0] === '_') {
+          return false;
+        }
+        return key in target;
+      }
+    };
+
+    var target = { _prop: 'foo', prop: 'foo' };
+    var proxy = new Proxy(target, handler);
+    // '_prop' in proxy;
+
+    // 对象不可配置或禁止扩展, 拦截报错
+    var obj = { a: 10};
+    Object.preventExtensions(obj);
+    var p = new Proxy(obj, {
+      has: function(target, prop) {
+        return false;
+      }
+    });
+    // 'a' in p;
+    // for in 不生效
+    let stu1 = { name: 'shu', score: 59};
+    let stu2 = { name: 'chen', scroe: 89};
+    handler = {
+      has (target, prop) {
+        if (prop === 'score' && target[prop] < 60) {
+          console.log(`${target.name} 不及格`);
+          return false;
+        }
+        return prop in target;
+      }
+    }
+    let oproxy1 = new Proxy(stu1, handler);
+    // 'score' in oproxy1
+    // for ( p in oproxy1) {
+    //   console.log(oproxy1[p]);
+    // }
+  </script>
+</body>
+</html>

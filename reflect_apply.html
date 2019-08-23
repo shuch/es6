@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>reflect apply</title>
+</head>
+<body>
+  <script>
+    const ages = [11, 33, 22, 45, 45, 85];
+
+    // old method
+    const young = Math.min.apply(Math, ages);
+    const old = Math.max.apply(Math, ages);
+    const type = Object.prototype.toString.call(young);
+    console.log(young, old, type);
+
+    // new method
+    const young2 = Reflect.apply(Math.min, Math, ages);
+    const old2 = Reflect.apply(Math.max, Math, ages);
+    const type2 = Reflect.apply(Object.prototype.toString, young2, []);
+    console.log(young2, old2, type2);
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 1.construct
+    var p = new Proxy(function(){}, {
+      construct: function(target, args) {
+        console.log('called: ' + args.join(', '));
+        return { value: args[0] *10 };
+      }
+    });
+    (new p(1)).value;
+    // 返回值必须是对象
+    var q = new Proxy(function() {}, {
+      construct: function (target, args) {
+        return 1;
+      }
+    })
+    // new q();
+    // 2.deleteProperty
+    var handler = {
+      deleteProperty (target, key) {
+        invariant(key, 'delete');
+        return true;
+      }
+    };
+    function invariant (key, action) {
+      if (key[0] === '_') {
+        throw new Error(`Invalid attempt to ${action} private "${key}" property`);
+      }
+    }
+    var target= { _prop: 'foo', prop: 'bar'};
+    var proxy = new Proxy(target, handler);
+    // delete proxy._prop
+
+    // 3.defineProperty
+    handler = {
+      defineProperty (target, key, descriptor) {
+        return false;
+      }
+    }
+    target = {};
+    proxy = new Proxy(target, handler);
+    proxy.foo = 'bar';
+    // 4.getOwnPropertyDescriptor 
+
+    handler = {
+      getOwnPropertyDescriptor (target, key) {
+        if (key[0] === '_') {
+          return;
+        }
+        return Object.getOwnPropertyDescriptor(target, key);
+      }
+    };
+
+    target = { _foo: 'bar', baz: 'tar'};
+    proxy = new Proxy(target, handler);
+    // Object.getOwnPropertyDescriptor(proxy, 'baz');
+    // {value: "tar", writable: true, enumerable: true, configurable: true}
+    // Object.getOwnPropertyDescriptor(proxy, '_foo');
+    // undefinde
+  
+    // 5.getPrototypeOf
+    var proto = {};
+    p = new Proxy({}, {
+      getPrototypeOf(target) {
+        return proto;
+      }
+    });
+    Object.getPrototypeOf(p)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+</html>

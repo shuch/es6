@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>reflect</title>
+</head>
+<body>
+  <script>
+    let p = {
+      a: 'a'
+    };
+    let handler = {
+      set(target, key, value, receiver) {
+        console.log('set');
+        Reflect.set(target, key, value);
+      },
+      defineProperty(target, key, attribute) {
+        console.log('defineProperty');
+        Reflect.defineProperty(target, key, attribute);
+      }
+    };
+
+    let obj = new Proxy(p, handler);
+    obj.a = 'A';
+  </script>
+</body>
+</html>
